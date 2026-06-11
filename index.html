@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Administrativo de Ventas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <h1>Admin Ventas</h1>
+        <div id="tasa-bcv">
+            Tasa BCV: <input type="number" id="tasa" placeholder="0.00">
+        </div>
+    </nav>
+    
+    <main>
+        <section id="inventario">
+            <h2>Inventario de Mercancía</h2>
+            <table id="tabla-inventario">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Vehículo</th>
+                        <th>Stock</th>
+                        <th>Precio ($)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-productos"></tbody>
+            </table>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
