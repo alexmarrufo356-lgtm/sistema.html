@@ -2,26 +2,29 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Administrativo</title>
+    <title>Sistema Administrativo LR Autorepuestos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav><h1>Admin Ventas</h1></nav>
-    
-    <main>
-        <!-- Formulario para agregar mercancía -->
-        <section id="formulario">
-            <h3>Agregar Nueva Mercancía</h3>
-            <input type="text" id="codigo" placeholder="Código">
-            <input type="text" id="nombre" placeholder="Nombre">
-            <input type="text" id="marca" placeholder="Marca">
-            <input type="number" id="precio" placeholder="Precio ($)">
-            <input type="number" id="stock" placeholder="Stock">
-            <button id="btnGuardar">Guardar en Inventario</button>
-        </section>
-    </main>
+    <div id="sidebar">
+        <button onclick="mostrar('inventario')">Inventario</button>
+        <button onclick="mostrar('ventas')">V</button>
+        <button onclick="mostrar('facturas')">F</button>
+    </div>
 
-    <!-- Cargamos el script con tipo módulo para que funcione la conexión -->
+    <div id="main-content">
+        <header>
+            <input type="text" id="buscador" placeholder="Buscar mercancía...">
+            <div id="bcv-config">
+                BCV: <input type="number" id="tasaBCV" placeholder="Tasa">
+                <span>Margen: 35%</span>
+            </div>
+        </header>
+
+        <!-- Aquí irán cambiando las secciones -->
+        <section id="vista-actual"></section>
+    </div>
+
     <script type="module" src="script.js"></script>
 </body>
 </html>
