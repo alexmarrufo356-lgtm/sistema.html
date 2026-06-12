@@ -24,3 +24,16 @@ export async function guardarMercancia(producto) {
         console.error("Error al guardar: ", e);
     }
 }
+// Añadimos el "encendido" para que el botón funcione
+document.getElementById("btnGuardar").addEventListener("click", async () => {
+    const producto = {
+        codigo: document.getElementById("codigo").value,
+        nombre: document.getElementById("nombre").value,
+        marca: document.getElementById("marca").value,
+        precio: document.getElementById("precio").value,
+        stock: document.getElementById("stock").value
+    };
+
+    // Llamamos a la función que ya tenías
+    await guardarMercancia(producto);
+});
