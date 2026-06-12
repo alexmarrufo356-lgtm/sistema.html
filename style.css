@@ -1,37 +1,41 @@
-/* --- NUEVOS ESTILOS PARA VENTAS Y FACTURAS --- */
+/* Estilos base */
+body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; }
 
-/* Tabla dentro de la sección de ventas */
-.tabla-venta { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin: 20px 0; 
-    background: white; 
-}
-.tabla-venta th, .tabla-venta td { 
-    border: 1px solid #ddd; 
-    padding: 10px; 
-    text-align: center; 
-}
+/* Barra de navegación superior */
+nav { background: #333; color: white; padding: 15px; border-radius: 8px; }
+nav h1 { margin: 0 0 10px 0; font-size: 1.5em; }
 
-/* Selector de productos */
-#select-productos { 
-    width: 100%; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    border-radius: 4px; 
-}
+#menu-superior { margin-bottom: 15px; }
+#menu-superior button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; background: #007bff; color: white; font-weight: bold; }
 
-/* Área de factura */
-#contenedor-factura { 
-    background: white; 
-    padding: 20px; 
-    border: 1px dashed #333; 
-    margin-top: 20px; 
-    min-height: 100px; 
-}
+#herramientas { display: flex; gap: 15px; align-items: center; }
+#buscador { padding: 8px; width: 200px; border-radius: 4px; border: none; }
+#tasaBCV { width: 80px; padding: 5px; }
 
-/* Ocultar elementos al imprimir la factura */
-@media print {
-    nav, #formulario, .calc-card, button { display: none !important; }
-    #contenedor-factura { border: none; display: block !important; }
-}
+/* Estilos de tabla y botones de acción */
+table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+th { background-color: #007bff; color: white; }
+
+.btn-borrar { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+.btn-editar { background: #ffc107; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+
+/* Formulario */
+#formulario { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+#formulario input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+
+/* ESTILOS PARA LA CALCULADORA LATERAL */
+.calc-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.calc-card h2 { color: #2c3e50; font-size: 1.2em; margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+.input-group { margin-bottom: 10px; }
+.input-group label { display: block; font-size: 0.9em; margin-bottom: 5px; color: #555; }
+.input-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+.results { background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; border-left: 4px solid #3498db; }
+.total-bs { background: #27ae60; color: white; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; }
+.total-bs-amount { font-size: 1.5em; font-weight: bold; display: block; }
+
+/* --- AÑADIDOS PARA VENTAS Y FACTURAS (Respetando tu estilo) --- */
+.tabla-venta { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+.tabla-venta th, .tabla-venta td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+#contenedor-factura { background: white; padding: 20px; border: 1px dashed #333; margin-top: 20px; }
+@media print { nav, #formulario, .calc-card, button { display: none !important; } #facturas { display: block !important; } }

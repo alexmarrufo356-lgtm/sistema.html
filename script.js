@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
+// Tu configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyAuKQKj16lJkANXbNc90u4ErScfJvtqiYI",
     authDomain: "sistemaventas-7ba29.firebaseapp.com",
@@ -13,70 +14,69 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let carrito = []; // Lista temporal de la venta
-
-// --- LÓGICA DE INVENTARIO ---
-async function cargarInventario() {
-    const tabla = document.getElementById("cuerpo-tabla");
-    const select = document.getElementById("select-productos");
-    if (!tabla) return;
-    
-    tabla.innerHTML = "";
-    if (select) select.innerHTML = "";
-    
-    const querySnapshot = await getDocs(collection(db, "inventario"));
-    querySnapshot.forEach((doc) => {
-        const p = doc.data();
-        const id = doc.id;
-        tabla.innerHTML += `<tr>
-            <td>${p.nombre}</td><td>$${p.precio}</td><td>${p.stock}</td>
-            <td><button onclick="borrarProducto('${id}')">Borrar</button></td>
-        </tr>`;
-        if (select) select.innerHTML += `<option value="${id}">${p.nombre} ($${p.precio})</option>`;
-    });
+// --- CÓDIGO ORIGINAL TUYO ---
+export async function guardarMercancia(producto) {
+    try {
+        const docRef = await addDoc(collection(db, "inventario"), producto);
+        console.log("Producto guardado con ID: ", docRef.id);
+        alert("Producto guardado con éxito");
+    } catch (e) {
+        console.error("Error al guardar: ", e);
+    }
 }
 
-// --- LÓGICA DE VENTAS ---
-window.agregarAVenta = async () => {
-    const id = document.getElementById("select-productos").value;
-    const snap = await getDoc(doc(db, "inventario", id));
-    const prod = snap.data();
-    carrito.push({ id, ...prod });
-    
-    const lista = document.getElementById("lista-venta");
-    lista.innerHTML += `<tr><td>${prod.nombre}</td><td>$${prod.precio}</td><td></td></tr>`;
-};
-
-window.procesarVenta = async () => {
-    for (let item of carrito) {
-        const prodRef = doc(db, "inventario", item.id);
-        const nuevoStock = parseInt(item.stock) - 1;
-        await updateDoc(prodRef, { stock: nuevoStock });
-    }
-    
-    // Generar Factura (Simple)
-    document.getElementById("contenedor-factura").innerHTML = `<h4>FACTURA</h4>` + 
-        carrito.map(i => `<p>${i.nombre} - $${i.precio}</p>`).join("");
-    
-    carrito = [];
-    document.getElementById("lista-venta").innerHTML = "";
-    alert("Venta procesada y stock actualizado");
-    cargarInventario();
-};
-
-// --- FUNCIONES BÁSICAS ---
-window.borrarProducto = async (id) => {
-    await deleteDoc(doc(db, "inventario", id));
-    cargarInventario();
-};
-
 document.getElementById("btnGuardar").addEventListener("click", async () => {
-    await addDoc(collection(db, "inventario"), {
+    const producto = {
+        codigo: document.getElementById("codigo").value,
         nombre: document.getElementById("nombre").value,
+        marca: document.getElementById("marca").value,
         precio: document.getElementById("precio").value,
         stock: document.getElementById("stock").value
-    });
-    cargarInventario();
+    };
+    await guardarMercancia(producto);
 });
 
-cargarInventario();
+window.calcularVenta = function() {
+    const tasa = parseFloat(document.getElementById('tasa').value) || 0;
+    const precio = parseFloat(document.getElementById('precioVenta').value) || 0;
+    const totalUsd = precio * 1.35;
+    const totalBs = totalUsd * tasa;
+    document.getElementById('total-usd').innerText = '$' + totalUsd.toFixed(2);
+    document.getElementById('total-bs').innerText = totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' Bs.';
+}
+
+// --- NUEVA LÓGICA DE VENTAS ---
+let carrito = [];
+
+window.agregarAVenta = async function(idProducto) {
+    const snap = await getDoc(doc(db, "inventario", idProducto));
+    const prod = snap.data();
+    carrito.push({ id: idProducto, ...prod });
+    alert(prod.nombre + " añadido a la venta");
+};
+
+window.procesarVenta = async function() {
+    if (carrito.length === 0) return alert("El carrito está vacío");
+
+    for (let item of carrito) {
+        const ref = doc(db, "inventario", item.id);
+        const prod = (await getDoc(ref)).data();
+        await updateDoc(ref, { stock: parseInt(prod.stock) - 1 });
+    }
+
+    const facturaHtml = `
+        <h3>FACTURA - ${new Date().toLocaleString()}</h3>
+        <p>Local: Mi Negocio</p>
+        <ul>${carrito.map(i => `<li>${i.nombre} - $${i.precio}</li>`).join("")}</ul>
+        <p>Total: $${carrito.reduce((acc, i) => acc + parseFloat(i.precio), 0)}</p>
+    `;
+    
+    document.getElementById("facturas").innerHTML = facturaHtml;
+    carrito = [];
+    alert("Venta realizada y stock actualizado");
+};
+
+window.borrarVenta = function() {
+    carrito = [];
+    alert("Venta borrada");
+};

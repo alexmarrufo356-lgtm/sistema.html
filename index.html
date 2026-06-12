@@ -21,6 +21,7 @@
                 <h3>Inventario</h3>
                 <input type="text" id="codigo" placeholder="Código">
                 <input type="text" id="nombre" placeholder="Nombre">
+                <input type="text" id="marca" placeholder="Marca">
                 <input type="number" id="precio" placeholder="Precio ($)">
                 <input type="number" id="stock" placeholder="Stock">
                 <button id="btnGuardar">Guardar Producto</button>
@@ -38,13 +39,13 @@
                     <thead><tr><th>Producto</th><th>Precio</th><th>Acciones</th></tr></thead>
                     <tbody id="lista-venta"></tbody>
                 </table>
-                <button onclick="procesarVenta()" style="background:green; color:white;">Finalizar Venta</button>
+                <button onclick="procesarVenta()" style="background:green; color:white; padding:10px; margin-top:10px;">Finalizar Venta</button>
             </section>
 
             <section id="facturas" style="display:none;">
                 <h3>Facturas</h3>
-                <div id="contenedor-factura"></div>
-                <button onclick="window.print()">Imprimir Factura</button>
+                <div id="contenedor-factura" style="padding:20px; border:1px solid #ccc;"></div>
+                <button onclick="window.print()" style="margin-top:10px;">Imprimir Factura</button>
             </section>
         </div>
     </main>
