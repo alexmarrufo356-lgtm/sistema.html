@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Nueva Barra de Navegación Superior -->
     <nav>
         <h1>Admin Ventas</h1>
         <div id="menu-superior">
@@ -21,21 +20,43 @@
         </div>
     </nav>
     
-    <main>
-        <!-- Formulario (Sección de Inventario) -->
-        <section id="formulario">
-            <h3>Agregar Nueva Mercancía</h3>
-            <input type="text" id="codigo" placeholder="Código">
-            <input type="text" id="nombre" placeholder="Nombre">
-            <input type="text" id="marca" placeholder="Marca">
-            <input type="number" id="precio" placeholder="Precio ($)">
-            <input type="number" id="stock" placeholder="Stock">
-            <button id="btnGuardar">Guardar en Inventario</button>
-        </section>
+    <main style="display: flex; gap: 20px; padding: 20px;">
+        <!-- Izquierda: Zona de gestión -->
+        <div style="flex: 2;">
+            <section id="formulario">
+                <h3>Agregar Nueva Mercancía</h3>
+                <input type="text" id="codigo" placeholder="Código">
+                <input type="text" id="nombre" placeholder="Nombre">
+                <input type="text" id="marca" placeholder="Marca">
+                <input type="number" id="precio" placeholder="Precio ($)">
+                <input type="number" id="stock" placeholder="Stock">
+                <button id="btnGuardar">Guardar en Inventario</button>
+            </section>
 
-        <!-- Secciones vacías por ahora para V y F -->
-        <section id="ventas" style="display:none;"><h3>Sección de Ventas</h3></section>
-        <section id="facturas" style="display:none;"><h3>Sección de Facturas</h3></section>
+            <section id="ventas" style="display:none;"><h3>Sección de Ventas</h3></section>
+            <section id="facturas" style="display:none;"><h3>Sección de Facturas</h3></section>
+        </div>
+
+        <!-- Derecha: Calculadora integrada -->
+        <aside style="flex: 1; min-width: 300px;">
+            <div class="calc-card">
+                <h2>Cobros (+35%)</h2>
+                <div class="input-group">
+                    <label>Tasa BCV:</label>
+                    <input type="number" id="tasa" value="567.68" oninput="calcularVenta()">
+                </div>
+                <div class="input-group">
+                    <label>Precio Base ($):</label>
+                    <input type="number" id="precioVenta" placeholder="Coloca el precio..." oninput="calcularVenta()">
+                </div>
+                <div class="results">
+                    <p>Precio final con +35%: <span id="total-usd" style="font-weight:bold;">$0.00</span></p>
+                </div>
+                <div class="total-bs">
+                    <span class="total-bs-amount" id="total-bs">0.00 Bs.</span>
+                </div>
+            </div>
+        </aside>
     </main>
 
     <script type="module" src="script.js"></script>
@@ -45,6 +66,15 @@
             document.getElementById('ventas').style.display = 'none';
             document.getElementById('facturas').style.display = 'none';
             document.getElementById(seccionId).style.display = 'block';
+        }
+
+        window.calcularVenta = function() {
+            const tasa = parseFloat(document.getElementById('tasa').value) || 0;
+            const precio = parseFloat(document.getElementById('precioVenta').value) || 0;
+            const totalUsd = precio * 1.35;
+            const totalBs = totalUsd * tasa;
+            document.getElementById('total-usd').innerText = '$' + totalUsd.toFixed(2);
+            document.getElementById('total-bs').innerText = totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' Bs.';
         }
     </script>
 </body>
