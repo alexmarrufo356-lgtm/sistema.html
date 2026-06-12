@@ -2,29 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Administrativo LR Autorepuestos</title>
+    <title>Sistema Administrativo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="sidebar">
-        <button onclick="mostrar('inventario')">Inventario</button>
-        <button onclick="mostrar('ventas')">V</button>
-        <button onclick="mostrar('facturas')">F</button>
-    </div>
-
-    <div id="main-content">
-        <header>
+    <!-- Nueva Barra de Navegación Superior -->
+    <nav>
+        <h1>Admin Ventas</h1>
+        <div id="menu-superior">
+            <button onclick="mostrar('formulario')">Inventario</button>
+            <button onclick="mostrar('ventas')">V</button>
+            <button onclick="mostrar('facturas')">F</button>
+        </div>
+        <div id="herramientas">
             <input type="text" id="buscador" placeholder="Buscar mercancía...">
-            <div id="bcv-config">
-                BCV: <input type="number" id="tasaBCV" placeholder="Tasa">
-                <span>Margen: 35%</span>
-            </div>
-        </header>
+            <span>BCV: <input type="number" id="tasaBCV" placeholder="Tasa"></span>
+            <span>Margen: 35%</span>
+        </div>
+    </nav>
+    
+    <main>
+        <!-- Formulario (Sección de Inventario) -->
+        <section id="formulario">
+            <h3>Agregar Nueva Mercancía</h3>
+            <input type="text" id="codigo" placeholder="Código">
+            <input type="text" id="nombre" placeholder="Nombre">
+            <input type="text" id="marca" placeholder="Marca">
+            <input type="number" id="precio" placeholder="Precio ($)">
+            <input type="number" id="stock" placeholder="Stock">
+            <button id="btnGuardar">Guardar en Inventario</button>
+        </section>
 
-        <!-- Aquí irán cambiando las secciones -->
-        <section id="vista-actual"></section>
-    </div>
+        <!-- Secciones vacías por ahora para V y F -->
+        <section id="ventas" style="display:none;"><h3>Sección de Ventas</h3></section>
+        <section id="facturas" style="display:none;"><h3>Sección de Facturas</h3></section>
+    </main>
 
     <script type="module" src="script.js"></script>
+    <script>
+        function mostrar(seccionId) {
+            document.getElementById('formulario').style.display = 'none';
+            document.getElementById('ventas').style.display = 'none';
+            document.getElementById('facturas').style.display = 'none';
+            document.getElementById(seccionId).style.display = 'block';
+        }
+    </script>
 </body>
 </html>
