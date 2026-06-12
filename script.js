@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-// Tu configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyAuKQKj16lJkANXbNc90u4ErScfJvtqiYI",
     authDomain: "sistemaventas-7ba29.firebaseapp.com",
@@ -14,63 +13,70 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Función para cargar los datos en la tabla (Inventario)
+let carrito = []; // Lista temporal de la venta
+
+// --- LÓGICA DE INVENTARIO ---
 async function cargarInventario() {
     const tabla = document.getElementById("cuerpo-tabla");
-    if (!tabla) return; // Por si no estamos en la página correcta
+    const select = document.getElementById("select-productos");
+    if (!tabla) return;
     
-    tabla.innerHTML = ""; 
+    tabla.innerHTML = "";
+    if (select) select.innerHTML = "";
+    
     const querySnapshot = await getDocs(collection(db, "inventario"));
-    
     querySnapshot.forEach((doc) => {
         const p = doc.data();
         const id = doc.id;
         tabla.innerHTML += `<tr>
-            <td>${p.codigo}</td><td>${p.nombre}</td><td>${p.marca}</td><td>${p.precio}</td><td>${p.stock}</td>
-            <td>
-                <button class="btn-editar" onclick="editarProducto('${id}')">Editar</button>
-                <button class="btn-borrar" onclick="borrarProducto('${id}')">Borrar</button>
-            </td>
+            <td>${p.nombre}</td><td>$${p.precio}</td><td>${p.stock}</td>
+            <td><button onclick="borrarProducto('${id}')">Borrar</button></td>
         </tr>`;
+        if (select) select.innerHTML += `<option value="${id}">${p.nombre} ($${p.precio})</option>`;
     });
 }
 
-// Función Borrar
-window.borrarProducto = async function(id) {
-    if(confirm("¿Seguro que quieres borrar este producto?")) {
-        await deleteDoc(doc(db, "inventario", id));
-        cargarInventario();
+// --- LÓGICA DE VENTAS ---
+window.agregarAVenta = async () => {
+    const id = document.getElementById("select-productos").value;
+    const snap = await getDoc(doc(db, "inventario", id));
+    const prod = snap.data();
+    carrito.push({ id, ...prod });
+    
+    const lista = document.getElementById("lista-venta");
+    lista.innerHTML += `<tr><td>${prod.nombre}</td><td>$${prod.precio}</td><td></td></tr>`;
+};
+
+window.procesarVenta = async () => {
+    for (let item of carrito) {
+        const prodRef = doc(db, "inventario", item.id);
+        const nuevoStock = parseInt(item.stock) - 1;
+        await updateDoc(prodRef, { stock: nuevoStock });
     }
-}
+    
+    // Generar Factura (Simple)
+    document.getElementById("contenedor-factura").innerHTML = `<h4>FACTURA</h4>` + 
+        carrito.map(i => `<p>${i.nombre} - $${i.precio}</p>`).join("");
+    
+    carrito = [];
+    document.getElementById("lista-venta").innerHTML = "";
+    alert("Venta procesada y stock actualizado");
+    cargarInventario();
+};
 
-// Función Editar (preparada para el siguiente paso)
-window.editarProducto = function(id) {
-    alert("Función de edición preparada para el ID: " + id);
-}
+// --- FUNCIONES BÁSICAS ---
+window.borrarProducto = async (id) => {
+    await deleteDoc(doc(db, "inventario", id));
+    cargarInventario();
+};
 
-// Guardar nueva mercancía
 document.getElementById("btnGuardar").addEventListener("click", async () => {
-    const producto = {
-        codigo: document.getElementById("codigo").value,
+    await addDoc(collection(db, "inventario"), {
         nombre: document.getElementById("nombre").value,
-        marca: document.getElementById("marca").value,
         precio: document.getElementById("precio").value,
         stock: document.getElementById("stock").value
-    };
-    await addDoc(collection(db, "inventario"), producto);
-    alert("Producto guardado");
-    cargarInventario(); // Recarga la tabla al guardar
+    });
+    cargarInventario();
 });
 
-// Calculadora
-window.calcularVenta = function() {
-    const tasa = parseFloat(document.getElementById('tasa').value) || 0;
-    const precio = parseFloat(document.getElementById('precioVenta').value) || 0;
-    const totalUsd = precio * 1.35;
-    const totalBs = totalUsd * tasa;
-    document.getElementById('total-usd').innerText = '$' + totalUsd.toFixed(2);
-    document.getElementById('total-bs').innerText = totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' Bs.';
-}
-
-// Cargar inventario al iniciar
 cargarInventario();

@@ -10,72 +10,50 @@
         <h1>Admin Ventas</h1>
         <div id="menu-superior">
             <button onclick="mostrar('formulario')">Inventario</button>
-            <button onclick="mostrar('ventas')">V</button>
-            <button onclick="mostrar('facturas')">F</button>
-        </div>
-        <div id="herramientas">
-            <input type="text" id="buscador" placeholder="Buscar mercancía...">
-            <span>BCV: <input type="number" id="tasaBCV" placeholder="Tasa"></span>
-            <span>Margen: 35%</span>
+            <button onclick="mostrar('ventas')">Ventas</button>
+            <button onclick="mostrar('facturas')">Facturas</button>
         </div>
     </nav>
     
     <main style="display: flex; gap: 20px; padding: 20px;">
         <div style="flex: 2;">
             <section id="formulario">
-                <h3>Agregar Nueva Mercancía</h3>
+                <h3>Inventario</h3>
                 <input type="text" id="codigo" placeholder="Código">
                 <input type="text" id="nombre" placeholder="Nombre">
-                <input type="text" id="marca" placeholder="Marca">
                 <input type="number" id="precio" placeholder="Precio ($)">
                 <input type="number" id="stock" placeholder="Stock">
-                <button id="btnGuardar">Guardar en Inventario</button>
-
-                <div id="lista-inventario" style="margin-top: 30px;">
-                    <h3>Mercancía en Inventario</h3>
-                    <table id="tabla-inventario">
-                        <thead>
-                            <tr>
-                                <th>Código</th><th>Nombre</th><th>Marca</th><th>Precio ($)</th><th>Stock</th><th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpo-tabla"></tbody>
-                    </table>
-                </div>
+                <button id="btnGuardar">Guardar Producto</button>
+                <table id="tabla-inventario">
+                    <thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+                    <tbody id="cuerpo-tabla"></tbody>
+                </table>
             </section>
 
-            <section id="ventas" style="display:none;"><h3>Sección de Ventas</h3></section>
-            <section id="facturas" style="display:none;"><h3>Sección de Facturas</h3></section>
-        </div>
+            <section id="ventas" style="display:none;">
+                <h3>Nueva Venta</h3>
+                <select id="select-productos"></select>
+                <button onclick="agregarAVenta()">Agregar a Venta</button>
+                <table class="tabla-venta">
+                    <thead><tr><th>Producto</th><th>Precio</th><th>Acciones</th></tr></thead>
+                    <tbody id="lista-venta"></tbody>
+                </table>
+                <button onclick="procesarVenta()" style="background:green; color:white;">Finalizar Venta</button>
+            </section>
 
-        <aside style="flex: 1; min-width: 300px;">
-            <div class="calc-card">
-                <h2>Cobros (+35%)</h2>
-                <div class="input-group">
-                    <label>Tasa BCV:</label>
-                    <input type="number" id="tasa" value="567.68" oninput="calcularVenta()">
-                </div>
-                <div class="input-group">
-                    <label>Precio Base ($):</label>
-                    <input type="number" id="precioVenta" placeholder="Coloca el precio..." oninput="calcularVenta()">
-                </div>
-                <div class="results">
-                    <p>Precio final con +35%: <span id="total-usd" style="font-weight:bold;">$0.00</span></p>
-                </div>
-                <div class="total-bs">
-                    <span class="total-bs-amount" id="total-bs">0.00 Bs.</span>
-                </div>
-            </div>
-        </aside>
+            <section id="facturas" style="display:none;">
+                <h3>Facturas</h3>
+                <div id="contenedor-factura"></div>
+                <button onclick="window.print()">Imprimir Factura</button>
+            </section>
+        </div>
     </main>
 
     <script type="module" src="script.js"></script>
     <script>
-        function mostrar(seccionId) {
-            document.getElementById('formulario').style.display = 'none';
-            document.getElementById('ventas').style.display = 'none';
-            document.getElementById('facturas').style.display = 'none';
-            document.getElementById(seccionId).style.display = 'block';
+        function mostrar(id) {
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
         }
     </script>
 </body>

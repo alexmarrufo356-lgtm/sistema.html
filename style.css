@@ -1,18 +1,37 @@
-/* Estilos base */
-body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; }
+/* --- NUEVOS ESTILOS PARA VENTAS Y FACTURAS --- */
 
-/* Barra de navegación */
-nav { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 8px; }
+/* Tabla dentro de la sección de ventas */
+.tabla-venta { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 20px 0; 
+    background: white; 
+}
+.tabla-venta th, .tabla-venta td { 
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    text-align: center; 
+}
 
-/* Estilos de tabla */
-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-th { background-color: #007bff; color: white; }
+/* Selector de productos */
+#select-productos { 
+    width: 100%; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    border-radius: 4px; 
+}
 
-/* Botones de acción */
-.btn-borrar { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-.btn-editar { background: #ffc107; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+/* Área de factura */
+#contenedor-factura { 
+    background: white; 
+    padding: 20px; 
+    border: 1px dashed #333; 
+    margin-top: 20px; 
+    min-height: 100px; 
+}
 
-/* Formulario */
-#formulario { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-#formulario input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+/* Ocultar elementos al imprimir la factura */
+@media print {
+    nav, #formulario, .calc-card, button { display: none !important; }
+    #contenedor-factura { border: none; display: block !important; }
+}
