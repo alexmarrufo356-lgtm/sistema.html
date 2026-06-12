@@ -1,31 +1,26 @@
-// Lógica básica para manejar el inventario
-let inventario = [];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-function agregarProducto(producto) {
-    // Validar si el código ya existe
-    const existe = inventario.find(p => p.codigo === producto.codigo);
-    
-    if (existe) {
-        alert("¡Error! Ya existe un producto con este código. Usa la función de edición.");
-        return;
+// Tu configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAuKQkjl6lJkANXbNc90u4ErScfJvtqiYI",
+  authDomain: "sistemaventas-7ba29.firebaseapp.com",
+  projectId: "sistemaventas-7ba29",
+  storageBucket: "sistemaventas-7ba29.firebasestorage.app",
+  messagingSenderId: "454587610356",
+  appId: "1:454587610356:web:7dd06a24d05d262b82daa1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Función para guardar mercancía
+export async function guardarMercancia(producto) {
+    try {
+        const docRef = await addDoc(collection(db, "inventario"), producto);
+        console.log("Producto guardado con ID: ", docRef.id);
+        alert("Producto guardado con éxito");
+    } catch (e) {
+        console.error("Error al guardar: ", e);
     }
-    
-    inventario.push(producto);
-    renderizarTabla();
-}
-
-function renderizarTabla() {
-    const tbody = document.getElementById("lista-productos");
-    tbody.innerHTML = "";
-    inventario.forEach(p => {
-        tbody.innerHTML += `<tr>
-            <td>${p.codigo}</td>
-            <td>${p.nombre}</td>
-            <td>${p.marca}</td>
-            <td>${p.vehiculo}</td>
-            <td>${p.stock}</td>
-            <td>${p.precio}$</td>
-            <td><button>Editar</button> <button>Borrar</button></td>
-        </tr>`;
-    });
 }
